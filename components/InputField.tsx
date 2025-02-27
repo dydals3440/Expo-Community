@@ -4,22 +4,20 @@ import {
   TextInput,
   TextInputProps,
   View,
-} from 'react-native';
-import React from 'react';
-import { colors } from '@/constants';
+} from "react-native";
+import React, { ForwardedRef, forwardRef } from "react";
+import { colors } from "@/constants";
 
 interface InputFieldProps extends TextInputProps {
   label?: string;
-  variant?: 'filled' | 'standard' | 'outlined';
+  variant?: "filled" | "standard" | "outlined";
   error?: string;
 }
 
-const InputField = ({
-  label,
-  variant = 'filled',
-  error = '',
-  ...props
-}: InputFieldProps) => {
+const InputField = (
+  { label, variant = "filled", error = "", ...props }: InputFieldProps,
+  ref?: ForwardedRef<TextInput>,
+) => {
   return (
     <View>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -31,8 +29,12 @@ const InputField = ({
         ]}
       >
         <TextInput
+          ref={ref}
           placeholderTextColor={colors.GRAY_500}
           style={styles.input}
+          autoCapitalize="none"
+          spellCheck={false}
+          autoCorrect={false}
           {...props}
         />
       </View>
@@ -41,16 +43,16 @@ const InputField = ({
   );
 };
 
-export default InputField;
+export default forwardRef(InputField);
 
 const styles = StyleSheet.create({
   container: {
     height: 44,
     borderRadius: 8,
     paddingHorizontal: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   label: {
     fontSize: 12,

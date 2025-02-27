@@ -1,7 +1,5 @@
 import FixedBottomCTA from "@/components/FixedBottomCTA";
-import InputField from "@/components/InputField";
-import { router } from "expo-router";
-import { useState } from "react";
+
 import { StyleSheet, View } from "react-native";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import EmailInput from "@/components/EmailInput";
@@ -32,7 +30,7 @@ export default function SignupScreen() {
     <FormProvider {...signupForm}>
       <View style={styles.container}>
         <EmailInput />
-        <PasswordInput />
+        <PasswordInput submitBehavior={"submit"} />
         <PasswordConfirmInput />
       </View>
       {/* 안드로이드는 inset.bottom = 0 그래서 12로 나오게함. */}
