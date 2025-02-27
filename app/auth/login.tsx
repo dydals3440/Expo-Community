@@ -1,28 +1,40 @@
-import FixedBottomCTA from '@/components/FixedBottomCTA';
-import InputField from '@/components/InputField';
-import { router } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import FixedBottomCTA from "@/components/FixedBottomCTA";
+
+import { StyleSheet, View } from "react-native";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import EmailInput from "@/components/EmailInput";
+import PasswordInput from "@/components/PasswordInput";
+
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 export default function LoginScreen() {
+  const loginForm = useForm<FormValues>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit: SubmitHandler<FormValues> = (formValues) => {
+    console.log(formValues);
+  };
+
   return (
-    <View style={styles.container}>
-      <View>
-        <InputField
-          label='이메일'
-          placeholder='이메일을 입력해주세요.'
-          onChangeText={() => {}}
-        />
-        <InputField
-          label='비밀번호'
-          placeholder='비밀번호를 입력해주세요.'
-          onChangeText={() => {}}
-        />
+    // Provider로 감싼 곳에서, react-hook-form을 사용할려면 Controller를 사용해야함
+    <FormProvider {...loginForm}>
+      <View style={styles.container}>
+        <EmailInput />
+        <PasswordInput />
       </View>
+      {/* 안드로이드는 inset.bottom = 0 그래서 12로 나오게함. */}
       <FixedBottomCTA
-        label='로그인하기'
-        onPress={() => router.push('/auth/login')}
+        label="회원가입하기"
+        onPress={loginForm.handleSubmit(onSubmit)}
       />
-    </View>
+    </FormProvider>
   );
 }
 
