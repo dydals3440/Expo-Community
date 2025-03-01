@@ -56,6 +56,13 @@ function RootNavigator() {
           headerShown: false,
         }}
       />
+      {/* 중첩된 네비게이션이 사라짐 */}
+      <Stack.Screen
+        name="post"
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name="+not-found" />
     </Stack>
   );
