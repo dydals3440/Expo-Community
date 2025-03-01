@@ -4,11 +4,13 @@ import useAuth from "@/hooks/queries/useAuth";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import FeedList from "@/components/FeedList";
 
 export default function HomeScreen() {
   const { auth } = useAuth();
   return (
     <SafeAreaView style={styles.container}>
+      <FeedList />
       {auth.id && (
         <Pressable
           style={styles.writeButton}

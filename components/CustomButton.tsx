@@ -6,7 +6,7 @@ import { colors } from "@/constants";
 interface CustomButtonProps extends PressableProps {
   label: string;
   size?: "medium" | "large";
-  variant?: "filled";
+  variant?: "filled" | "standard";
 }
 
 // 컴포넌트는 함수형으로
@@ -50,6 +50,11 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.8,
+  },
+  standard: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: colors.ORANGE_600,
   },
 });
 

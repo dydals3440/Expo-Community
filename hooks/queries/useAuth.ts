@@ -1,16 +1,30 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getMe, postLogin, postSignup } from "@/api/auth";
 import { router } from "expo-router";
-import { deleteSecureStore, saveSecureStore } from "@/utils/secureStore";
+import {
+  deleteSecureStore,
+  getSecureStore,
+  saveSecureStore,
+} from "@/utils/secureStore";
 import { removeHeader, setHeader } from "@/utils/header";
 import queryClient from "@/api/queryClient";
 import { useEffect } from "react";
+import { queryKeys } from "@/constants";
 
 function useGetMe() {
-  const { data, isError } = useQuery({
+  const { data, isError, isSuccess } = useQuery({
     queryFn: getMe,
-    queryKey: ["auth", "getMe"],
+    queryKey: [queryKeys.AUTH, queryKeys.GET_ME],
   });
+
+  useEffect(() => {
+    (async () => {
+      if (isSuccess) {
+        const accessToken = await getSecureStore("accessToken");
+        setHeader("Authorization", `Bearer ${accessToken}`);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (isError) {
@@ -30,7 +44,7 @@ function useLogin() {
       await saveSecureStore("accessToken", accessToken);
       // 내 정보를 가져오는 훅을 호출
       queryClient.fetchQuery({
-        queryKey: ["auth", "getMe"],
+        queryKey: [queryKeys.AUTH, queryKeys.GET_ME],
       });
       router.replace("/");
     },
@@ -56,7 +70,9 @@ function useAuth() {
   const logout = () => {
     removeHeader("Authorization");
     deleteSecureStore("accessToken");
-    queryClient.resetQueries({ queryKey: ["auth"] });
+    queryClient.resetQueries({
+      queryKey: [queryKeys.AUTH],
+    });
   };
 
   return {

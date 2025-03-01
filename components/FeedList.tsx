@@ -1,59 +1,51 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import FeedItem from '@/components/FeedItem';
-import { colors } from '@/constants';
-import { Post } from '@/types';
-
-const dummyData = [
-  {
-    id: 1,
-    userId: 1,
-    title: '더미 제목입니다.',
-    description:
-      '더미 내용입니다. 더미 내용입니다. 더미 내용입니다. 더미 내용입니다. 더미 내용입니다. 더미 내용입니다. 더미 내용입니다.  더미 내용입니다.더미 내용입니다.  더미 내용입니다. 더미 내용입니다.',
-    createdAt: '2025-01-01',
-    author: {
-      id: 1,
-      nickname: '닉네임',
-      imageUri: '',
-    },
-    imageUris: [],
-    likes: [],
-    hasVote: false,
-    voteCount: 1,
-    commentCount: 1,
-    viewCount: 1,
-  },
-  ,
-  {
-    id: 2,
-    userId: 1,
-    title: '더미 제목입니다.',
-    description:
-      '더미 내용입니다. 더미 내용입니다. 더미 내용입니다. 더미 내용입니다. 더미 내용입니다. 더미 내용입니다. 더미 내용입니다.  더미 내용입니다.더미 내용입니다.  더미 내용입니다. 더미 내용입니다.',
-    createdAt: '2025-01-01',
-    author: {
-      id: 1,
-      nickname: '닉네임',
-      imageUri: '',
-    },
-    imageUris: [],
-    likes: [],
-    hasVote: false,
-    voteCount: 1,
-    commentCount: 1,
-    viewCount: 1,
-  },
-];
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import React, { useRef, useState } from "react";
+import FeedItem from "@/components/FeedItem";
+import { colors } from "@/constants";
+import { Post } from "@/types";
+import useGetInfinitePosts from "@/hooks/queries/useGetInfinitePosts";
+import { useScrollToTop } from "@react-navigation/native";
 
 const FeedList = () => {
+  const {
+    data: posts,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useGetInfinitePosts();
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const ref = useRef<FlatList | null>(null);
+  // 홈 클릭시 위로
+  useScrollToTop(ref);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
+
+  const handleEndReached = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
   return (
-    <FlatList
-      data={dummyData.filter((item) => item !== undefined)}
-      keyExtractor={(item) => String(item?.id)}
-      renderItem={({ item }) => <FeedItem post={item as Post} />}
-      contentContainerStyle={styles.contentContainer}
-    />
+    <>
+      <FlatList
+        ref={ref}
+        data={posts?.pages?.flat()}
+        keyExtractor={(item) => String(item?.id)}
+        renderItem={({ item }) => <FeedItem post={item as Post} />}
+        contentContainerStyle={styles.contentContainer}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.5}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
+      />
+    </>
   );
 };
 
