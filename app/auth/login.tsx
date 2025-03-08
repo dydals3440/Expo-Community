@@ -34,7 +34,7 @@ export default function LoginScreen() {
       </View>
       {/* 안드로이드는 inset.bottom = 0 그래서 12로 나오게함. */}
       <FixedBottomCTA
-        label="회원가입하기"
+        label="로그인하기"
         onPress={loginForm.handleSubmit(onSubmit)}
       />
     </FormProvider>

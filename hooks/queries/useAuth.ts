@@ -42,6 +42,7 @@ function useLogin() {
     onSuccess: async ({ accessToken }) => {
       setHeader("Authorization", `Bearer ${accessToken}`);
       await saveSecureStore("accessToken", accessToken);
+      console.log(accessToken);
       // 내 정보를 가져오는 훅을 호출
       queryClient.fetchQuery({
         queryKey: [queryKeys.AUTH, queryKeys.GET_ME],
