@@ -5,17 +5,24 @@ import {
   TextInputProps,
   View,
 } from "react-native";
-import React, { ForwardedRef, forwardRef } from "react";
+import React, { ForwardedRef, forwardRef, ReactNode } from "react";
 import { colors } from "@/constants";
 
 interface InputFieldProps extends TextInputProps {
   label?: string;
   variant?: "filled" | "standard" | "outlined";
   error?: string;
+  rightChild?: ReactNode;
 }
 
 const InputField = (
-  { label, variant = "filled", error = "", ...props }: InputFieldProps,
+  {
+    label,
+    variant = "filled",
+    error = "",
+    rightChild = null,
+    ...props
+  }: InputFieldProps,
   ref?: ForwardedRef<TextInput>,
 ) => {
   return (
@@ -38,6 +45,7 @@ const InputField = (
           autoCorrect={false}
           {...props}
         />
+        {rightChild}
       </View>
       {Boolean(error) && <Text style={styles.error}>{error}</Text>}
     </View>
